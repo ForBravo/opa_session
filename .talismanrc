@@ -1,0 +1,6 @@
+fileignoreconfig:
+- filename: .terraform.lock.hcl
+  checksum: f5468f51ae0b6de5d3e9db6a4ba43cd3a9df39a93f219b04fffbf397d2b3104e
+- filename: opa.tf
+  checksum: b02d523d3900066999d0568517281401910b1f8e825acad3a90861ec28f093a4
+version: ""
