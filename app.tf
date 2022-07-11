@@ -98,9 +98,9 @@ resource "kubernetes_stateful_set_v1" "slp_istio_app" {
     template {
       metadata {
         labels = {
-          "sidecar.istio.io/inject"  = "false"
-          app                        = "slp"
-          system-type                = "istio"
+          "sidecar.istio.io/inject" = "false"
+          app                       = "slp"
+          system-type               = "istio"
         }
       }
       spec {
@@ -181,8 +181,28 @@ resource "kubernetes_service" "slp_istio_svc" {
       target_port = 8080
     }
     selector = {
-      app = "slp"
+      app         = "slp"
       system-type = "istio"
+    }
+  }
+}
+
+resource "kubernetes_service" "app_svc" {
+  metadata {
+    name      = "app-svc"
+    namespace = kubernetes_namespace.app.metadata.0.name
+    labels    = {
+      app         = "app"
+    }
+  }
+  spec {
+    port {
+      port        = 80
+      protocol    = "TCP"
+      target_port = 8080
+    }
+    selector = {
+      app         = "app"
     }
   }
 }
