@@ -1,6 +1,10 @@
 fileignoreconfig:
 - filename: .terraform.lock.hcl
   checksum: f5468f51ae0b6de5d3e9db6a4ba43cd3a9df39a93f219b04fffbf397d2b3104e
+- filename: istio.tf
+  checksum: d55578708e3542a72000d3e59899677bdd0033ebb3912f76a7c440ed33601f58
 - filename: opa.tf
-  checksum: b02d523d3900066999d0568517281401910b1f8e825acad3a90861ec28f093a4
+  checksum: c6b12de23c007d10b2979c42e275d82ca6b1fa8e24a82b047da1282632949117
+- filename: app.tf
+  checksum: 5d639c8a09a52bb135b0dcdbf493f5aa603a9dcd942ad6db047ee02f883ef812
 version: ""

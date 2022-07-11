@@ -22,11 +22,11 @@ resource "kubernetes_service" "opa_istio_admission_controller" {
 
 resource "kubernetes_secret_v1" "server_cert" {
   metadata {
-    name = "server-cert"
+    name      = "server-cert"
     namespace = kubernetes_namespace.opa_istio.metadata.0.name
   }
   data = {
-    "tls.crt"= <<EOT
+    "tls.crt" = <<EOT
 -----BEGIN CERTIFICATE-----
 MIIFYDCCA0igAwIBAgIJAIVbQs/j7VbCMA0GCSqGSIb3DQEBCwUAMBsxGTAXBgNV
 BAMMEE9QQSBFbnZveSBwbHVnaW4wHhcNMjAxMTIzMTA0NDM4WhcNMjUxMTIyMTA0
@@ -59,7 +59,7 @@ DIIdL1PKfMCdYk0aKgLTVu4l267PxrIihk8HqQXWPaZy42tRUZ9vE5fhnSp1zFAK
 q3Z1W1T7i2CPvan59FrHePobkFvgS83vnUqH3hzhfuBZC2cf
 -----END CERTIFICATE-----
 EOT
-    "tls.key"= <<EOT
+    "tls.key" = <<EOT
 -----BEGIN RSA PRIVATE KEY-----
 MIIJKAIBAAKCAgEA/pfmouSAM1arLuBUJugyK1WeeRln0JwGz5SqPckykvMUOTzO
 idK/CnZuDRKxnhBESws6phrqDQ4aopdAOjE1sIZ/pqjCEkgeeX3k9CpHnF/SpP//
@@ -117,79 +117,78 @@ EOT
 
 resource "kubernetes_config_map_v1" "inject_policy" {
   metadata {
-    name = "inject-policy"
+    name      = "inject-policy"
     namespace = kubernetes_namespace.opa_istio.metadata.0.name
   }
   data = {
-    "inject.rego"= <<EOT
-    package istio
+    "inject.rego" = <<EOT
+package istio
 
-    inject = {
-      "apiVersion": "admission.k8s.io/v1beta1",
-      "kind": "AdmissionReview",
-      "response": {
-        "allowed": true,
-        "patchType": "JSONPatch",
-        "patch": base64.encode(json.marshal(patch)),
-      },
-    }
+inject = {
+  "apiVersion": "admission.k8s.io/v1beta1",
+  "kind": "AdmissionReview",
+  "response": {
+    "allowed": true,
+    "patchType": "JSONPatch",
+    "patch": base64.encode(json.marshal(patch)),
+  },
+}
 
-    patch = [{
-      "op": "add",
-      "path": "/spec/containers/-",
-      "value": opa_container,
-    }, {
-      "op": "add",
-      "path": "/spec/volumes/-",
-      "value": opa_config_volume,
-    }]
+patch = [{
+  "op": "add",
+  "path": "/spec/containers/-",
+  "value": opa_container,
+}, {
+  "op": "add",
+  "path": "/spec/volumes/-",
+  "value": opa_config_volume,
+}]
 
-    opa_container = {
-      "image": "openpolicyagent/opa:0.41.0-envoy-rootless",
-      "name": "opa",
-      "args": [
-        "run",
-        "--server",
-        "--ignore=.*",
-        "--config-file=/config/conf.yaml",
-        "--authorization=basic",
-        "--addr=http://127.0.0.1:8181",
-        "--diagnostic-addr=0.0.0.0:8282",
-      ],
-      "volumeMounts": [{
-        "mountPath": "/config",
-        "name": "opa-config-vol",
-      }],
-      "readinessProbe": {
-        "httpGet": {
-          "path": "/health?bundle=true",
-          "port": 8282,
-        },
-        "initialDelaySeconds": 5,
-        "periodSeconds": 5
-      },
-      "livenessProbe": {
-        "httpGet": {
-          "path": "/health",
-          "port": 8282,
-        },
-        "initialDelaySeconds": 5,
-        "periodSeconds": 5
-      }
-    }
+opa_container = {
+  "image": "openpolicyagent/opa:0.41.0-envoy-rootless",
+  "name": "opa",
+  "args": [
+    "run",
+    "--server",
+    "--ignore=.*",
+    "--config-file=/config/conf.yaml",
+    "--authorization=basic",
+    "--addr=http://127.0.0.1:8181",
+    "--diagnostic-addr=0.0.0.0:8282",
+  ],
+  "volumeMounts": [{
+    "mountPath": "/config",
+    "name": "opa-config-vol",
+  }],
+  "readinessProbe": {
+    "httpGet": {
+      "path": "/health?bundle=true",
+      "port": 8282,
+    },
+    "initialDelaySeconds": 5,
+    "periodSeconds": 5
+  },
+  "livenessProbe": {
+    "httpGet": {
+      "path": "/health",
+      "port": 8282,
+    },
+    "initialDelaySeconds": 5,
+    "periodSeconds": 5
+  }
+}
 
-    opa_config_volume = {
-      "name": "opa-istio-config",
-      "configMap": {"name": "opa-istio-config"},
-    }
-
+opa_config_volume = {
+  "name": "opa-config-vol",
+  "configMap": {"name": "opa-istio-config"},
+}
 EOT
   }
 }
 
 resource "kubernetes_deployment_v1" "opa_istio_admission_controller" {
   metadata {
-    name = "admission-controller"
+    name      = "admission-controller"
     namespace = kubernetes_namespace.opa_istio.metadata.0.name
   }
   spec {
@@ -208,7 +207,7 @@ resource "kubernetes_deployment_v1" "opa_istio_admission_controller" {
       }
       spec {
         container {
-          name = "opa"
+          name  = "opa"
           image = "openpolicyagent/opa:0.42.1"
           port {
             container_port = 443
@@ -223,29 +222,29 @@ resource "kubernetes_deployment_v1" "opa_istio_admission_controller" {
           ]
           liveness_probe {
             http_get {
-              path = "/health?plugins"
+              path   = "/health?plugins"
               scheme = "HTTPS"
-              port = "443"
+              port   = "443"
             }
             initial_delay_seconds = 5
-            period_seconds = 5
+            period_seconds        = 5
           }
           readiness_probe {
             http_get {
-              path = "/health?plugins"
+              path   = "/health?plugins"
               scheme = "HTTPS"
-              port = "443"
+              port   = "443"
             }
             initial_delay_seconds = 5
-            period_seconds = 5
+            period_seconds        = 5
           }
           volume_mount {
-            read_only = true
+            read_only  = true
             mount_path = "/certs"
             name       = "server-cert"
           }
           volume_mount {
-            read_only = true
+            read_only  = true
             mount_path = "/policies"
             name       = "inject-policy"
           }
@@ -265,6 +264,10 @@ resource "kubernetes_deployment_v1" "opa_istio_admission_controller" {
       }
     }
   }
+  depends_on = [
+    kubernetes_config_map_v1.inject_policy,
+    kubernetes_secret_v1.server_cert
+  ]
   timeouts {
     create = "20m"
   }
@@ -320,15 +323,22 @@ EOT
       api_groups   = ["*"]
       api_versions = ["v1"]
       operations   = ["CREATE"]
-      resources    = ["pod"]
+      resources    = ["pods"]
     }
     namespace_selector {
       match_labels = {
         opa-istio-injection = "enabled"
       }
     }
-    failure_policy = "Fail"
+    object_selector {
+      match_expressions {
+        key      = "sidecar.istio.io/inject"
+        operator = "NotIn"
+        values   = ["false"]
+      }
+    }
+    failure_policy            = "Fail"
     admission_review_versions = ["v1beta1"]
-    side_effects = "None"
+    side_effects              = "None"
   }
 }
