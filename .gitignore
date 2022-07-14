@@ -32,3 +32,6 @@ override.tf.json
 .idea
 
 *.auto.tfvars
+
+sample.rego
+auth0

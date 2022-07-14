@@ -9,3 +9,11 @@ variable "styra_host" {
 variable "styra_system_token" {
   type = string
 }
+
+variable "auth0_domain" {
+  type = string
+}
+
+variable "auth0_app_name" {
+  type = string
+}

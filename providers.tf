@@ -8,3 +8,6 @@ provider "helm" {
     config_path = "~/.kube/config"
   }
 }
+provider "auth0" {
+  domain = var.auth0_domain
+}

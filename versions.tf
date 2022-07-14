@@ -12,5 +12,9 @@ terraform {
     helm = {
       version = "~> 2.6.0"
     }
+    auth0 = {
+      source  = "auth0/auth0"
+      version = "~> 0.28.1"
+    }
   }
 }
