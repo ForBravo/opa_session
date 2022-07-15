@@ -115,7 +115,7 @@ resource "helm_release" "base" {
 
 resource "kubernetes_namespace" "istio_ingress" {
   metadata {
-    name   = "istio-ingress"
+    name = "istio-ingress"
     labels = {
       istio-injection = "enabled"
     }

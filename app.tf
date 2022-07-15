@@ -1,6 +1,6 @@
 resource "kubernetes_namespace" "app" {
   metadata {
-    name   = "app"
+    name = "app"
     labels = {
       opa-istio-injection = "enabled"
       istio-injection     = "enabled"
@@ -13,7 +13,7 @@ resource "kubernetes_manifest" "opa_ext_authz" {
   manifest = {
     apiVersion = "networking.istio.io/v1alpha3"
     kind       = "EnvoyFilter"
-    metadata   = {
+    metadata = {
       name      = "opa-ext-authz"
       namespace = kubernetes_namespace.app.metadata.0.name
     }
@@ -47,7 +47,7 @@ resource "kubernetes_secret_v1" "slp_istio" {
   metadata {
     name      = "slp-istio"
     namespace = kubernetes_namespace.app.metadata.0.name
-    labels    = {
+    labels = {
       app         = "slp"
       system-type = "istio"
     }
@@ -81,7 +81,7 @@ resource "kubernetes_stateful_set_v1" "slp_istio_app" {
   metadata {
     name      = "slp-istio-app"
     namespace = kubernetes_namespace.app.metadata.0.name
-    labels    = {
+    labels = {
       app         = "slp"
       system-type = "istio"
     }
@@ -101,14 +101,14 @@ resource "kubernetes_stateful_set_v1" "slp_istio_app" {
           "sidecar.istio.io/inject" = "false"
           app                       = "slp"
           system-type               = "istio"
-          config-version = md5(jsonencode(kubernetes_secret_v1.slp_istio.data))
+          config-version            = md5(jsonencode(kubernetes_secret_v1.slp_istio.data))
         }
       }
       spec {
         container {
           name  = "slp"
           image = "styra/styra-local-plane:0.4.4"
-          args  = [
+          args = [
             "--config-file=/config/slp.yaml",
             "--addr=0.0.0.0:8080"
           ]
@@ -149,7 +149,7 @@ resource "kubernetes_stateful_set_v1" "slp_istio_app" {
     }
     volume_claim_template {
       metadata {
-        name   = "slp-scratch-vol"
+        name = "slp-scratch-vol"
         labels = {
           slp-pvc : "slp-istio-app-pvc"
         }
@@ -170,7 +170,7 @@ resource "kubernetes_service" "slp_istio_svc" {
   metadata {
     name      = "slp-istio-svc"
     namespace = kubernetes_namespace.app.metadata.0.name
-    labels    = {
+    labels = {
       app         = "slp"
       system-type = "istio"
     }
@@ -192,8 +192,8 @@ resource "kubernetes_service" "app_svc" {
   metadata {
     name      = "app-svc"
     namespace = kubernetes_namespace.app.metadata.0.name
-    labels    = {
-      app         = "app"
+    labels = {
+      app = "app"
     }
   }
   spec {
@@ -203,7 +203,7 @@ resource "kubernetes_service" "app_svc" {
       target_port = 8080
     }
     selector = {
-      app         = "app"
+      app = "app"
     }
   }
 }
@@ -222,7 +222,7 @@ resource "kubernetes_deployment" "app" {
     }
     template {
       metadata {
-        name   = "app"
+        name = "app"
         labels = {
           app = "app"
         }

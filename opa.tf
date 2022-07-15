@@ -201,8 +201,8 @@ resource "kubernetes_deployment_v1" "opa_istio_admission_controller" {
     template {
       metadata {
         labels = {
-          app = "admission-controller"
-          config-version = md5(jsonencode(merge(kubernetes_config_map_v1.inject_policy.data,kubernetes_secret_v1.server_cert.data)))
+          app            = "admission-controller"
+          config-version = md5(jsonencode(merge(kubernetes_config_map_v1.inject_policy.data, kubernetes_secret_v1.server_cert.data)))
         }
         name = "admission-controller"
       }

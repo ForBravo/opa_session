@@ -1,6 +1,6 @@
 resource "auth0_client" "auth_app" {
-  name        = var.auth0_app_name
-  app_type    = "non_interactive"
+  name     = var.auth0_app_name
+  app_type = "non_interactive"
   grant_types = [
     "client_credentials"
   ]
@@ -15,11 +15,11 @@ resource "auth0_client_grant" "my_client_grant" {
 resource "auth0_action" "claim_action" {
   name = "Add Custom Claim"
   supported_triggers {
-    id = "credentials-exchange"
+    id      = "credentials-exchange"
     version = "v2"
   }
   runtime = "node16"
-  code = <<-EOT
+  code    = <<-EOT
     /**
     * Handler that will be called during the execution of a Client Credentials exchange.
     *
@@ -30,13 +30,13 @@ resource "auth0_action" "claim_action" {
       api.accessToken.setCustomClaim("https://m2m.sample.com/role", event.request.body.role);
      };
     EOT
-  deploy = true
+  deploy  = true
 }
 
 resource "auth0_trigger_binding" "m2m_flow" {
   trigger = "credentials-exchange"
   actions {
-    id = auth0_action.claim_action.id
+    id           = auth0_action.claim_action.id
     display_name = auth0_action.claim_action.name
   }
 }
