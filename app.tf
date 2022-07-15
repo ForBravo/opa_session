@@ -101,6 +101,7 @@ resource "kubernetes_stateful_set_v1" "slp_istio_app" {
           "sidecar.istio.io/inject" = "false"
           app                       = "slp"
           system-type               = "istio"
+          config-version = md5(jsonencode(kubernetes_secret_v1.slp_istio.data))
         }
       }
       spec {
