@@ -10,5 +10,4 @@
 ## Agenda
 - How does opa admission controller work
 - check-sum annotation
-- webhook selectors
 - Go through Istio policies in detail
