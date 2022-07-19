@@ -282,6 +282,7 @@ resource "kubernetes_mutating_webhook_configuration_v1" "opa_istio_admission_con
       service {
         name      = "admission-controller"
         namespace = "opa-istio"
+        # https://dboles-opa-docs.netlify.app/docs/latest/rest-api/#get-a-document-webhook
         path      = "/v0/data/istio/inject"
       }
       ca_bundle = <<EOT
