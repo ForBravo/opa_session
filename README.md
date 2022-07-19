@@ -6,3 +6,9 @@
 	- Folk the policy repo
 	- Change jwks datasource to your own Auth0 tenant
 - A local colima k8s context
+
+## Agenda
+- How does opa admission controller work
+- check-sum annotation
+- webhook selectors
+- Go through Istio policies in detail
