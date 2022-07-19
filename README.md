@@ -5,4 +5,4 @@
 	- Manually add Deploy key with write access
 	- Folk the policy repo
 	- Change jwks datasource to your own Auth0 tenant
-- 
+- A local colima k8s context
