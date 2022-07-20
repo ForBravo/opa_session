@@ -205,7 +205,7 @@ resource "kubernetes_service" "app_svc" {
     port {
       port        = 80
       protocol    = "TCP"
-      target_port = 8080
+      target_port = 80
     }
     selector = {
       app = "app"
@@ -237,7 +237,7 @@ resource "kubernetes_deployment" "app" {
           name  = "app"
           image = "docker.io/nginx:1.23.0"
           port {
-            container_port = 8080
+            container_port = 80
           }
         }
       }
