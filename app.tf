@@ -6,7 +6,10 @@ resource "kubernetes_namespace" "app" {
       istio-injection     = "enabled"
     }
   }
-  depends_on = [kubernetes_mutating_webhook_configuration_v1.opa_istio_admission_controller]
+  depends_on = [
+    kubernetes_mutating_webhook_configuration_v1.opa_istio_admission_controller,
+    helm_release.gateway
+  ]
 }
 
 resource "kubernetes_manifest" "opa_ext_authz" {
